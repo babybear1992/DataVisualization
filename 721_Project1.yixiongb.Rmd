@@ -1,0 +1,106 @@
+---
+title: "World Cup & World"
+author: "Yixiong Bao"
+output: html_document
+fontsize: 12pt
+---
+
+In 2010, World Cup was successfully hosted in South Africa. What is the population, economy, football papolatiry of countries  atteneded the World Cup games? This data analysis here might indicate us the answer.
+
+#### Background
+
+There are 191 countries registered as **FIFA** (The Fédération Internationale de Football Association) members. FIFA distributes them to 6 confederations:
+
+- **AFC** Asian Football Confederation
+- **CAF** Confédération Africaine de Football
+- **UEFA** Union of European Football Associations
+- **OFC** Oceania Football Confederation
+- **CONCACAF** Confederation of North, Central American and Caribbean Association Football
+- **CONMEBOL** Confederación Sudamericana de Fútbol
+
+#### Are teams equal? 
+6 confederations, 32 teams, how's the distribution of teams atteneded World Cup? Are they equal? 
+```{r, echo=FALSE}
+count <- c(4, 5, 9, 1, 3, 5) 
+confederation <- c("AFC", "CAF","UEFA","OFC", "CONCACAF","CONMEBOL")
+library(ggplot2)
+share <- data.frame(cbind(count,confederation))
+m <- ggplot(share,aes(x=confederation,y=count,fill=confederation),stat="identity")
+m + geom_bar(stat="identity",width=0.65) + guides(fill=FALSE) +ggtitle("Team attended World Cup 2010 by Confederation")
+```
+
+It's clear to see that UEFA have the majority number of teams(countries) attneded the World Cup. And OFC **only has one** attdentance to show on the game. It's hard to say that countries in each confederation have equal opportunity to attend World Cup.
+
+#### More teams, more population?
+Does more teams(countries) in UEFA means that UEFA has more population than other confederations? The following graph would tell us the answer. 
+
+```{r, echo=FALSE}
+B <- c(58.9,14.9,12.4,7.8,5.6)
+lbls1 <- c("AFC", "CAF", "UEFA","CONCACAF", "CONMEBOL")
+pct1 <- round(B/sum(B)*100)
+lbls1 <- paste(lbls1,pct1)
+lbls1 <- paste(lbls1,"%",sep="")
+pie(B,labels = lbls1, col=rainbow(length(lbls1)), main="World Population Share 
+    by FIFA Confederation (%)")
+```
+
+Even though UEFA shares the most countries attended the World Cup,its population share only ranks 3rd among confederations. Moreover, because of OFC shares less than 1% of population,it wasn't considered when making this graph.
+
+#### More teams, better economy?
+A national football needs economy support from its nation. What's the economy condition among countries in FIFA's federations? Here we use GDP as a measurment to analyze.
+
+```{r, echo=FALSE}
+C <- c(31.6,2.6,39,15.8,10.3)
+lbls2 <- c("AFC", "CAF", "UEFA", "CONCACAF","CONMEBOL")
+pct2 <- round(C/sum(C)*100)
+lbls2 <- paste(lbls2,pct2)
+lbls2 <- paste(lbls2,"%",sep="")
+pie(C,lbls2,col=rainbow(length(lbls2)), main="World GDP Share
+    by FIFA Confederation")
+```
+
+Obviously,UEFA ranks 1st place when comparing GDP share with other confederations. Since the GDP share of OFC doesn't reach 1%, it is not considered here.
+
+#### More teams, more TV audience? 
+Football is popular around the world. What's the TV audience composition of World Cup 2010? The following graph would tell.
+```{r,echo=FALSE}
+D <- c(42.6,8.6,25,9.8,13.5)
+lbls3 <- c("AFC", "CAF", "UEFA", "CONCACAF","CONMEBOL")
+pct3 <- round(D/sum(D)*100)
+lbls3 <- paste(lbls3,pct3)
+lbls3 <- paste(lbls3,"%",sep="")
+pie(B,lbls3,col=rainbow(length(lbls3)), main="World Cup 2010 TV audience Share 
+    by FIFA Confederation")
+```
+
+It's clear that AFC (represent Aisan) ranks the 1st position and UEFA weights the second, which means football is a popular sport among European countries.
+
+####UEFA's success in World Cup
+
+- Relatively large population would feed more number of qualified players
+
+- Better economy environment would offer more support to football
+
+- TV audience would reflect the populariy of football among European countries 
+
+#### Potential Asian hosts for World Cup
+Since South Korea and Japan helds World Cup in 2002, we don't consider them in this part. We choose **China, India, Indonesia** as candidates to analyze, because these 3 countries have relatively high population, TV audience and GDP index.
+
+```{r, echo=FALSE}
+library(grid)
+library(gridExtra)
+country = factor(c('China','India','Indonesia'))
+Population = factor(c(19.5,17.6,3.5))
+TV = factor(c(14.8,2,6.7))
+GDP = factor(c(7.3,0.5,2.9))
+dat1 <- data.frame(country,Population,TV,GDP)
+p1<-ggplot(dat1)+geom_bar(aes(x=country,y=Population,fill=country),width=0.65,stat="identity")+guides(fill=FALSE)+ggtitle("Compare in Population share")+ylab("population%")+xlab("")
+p2<-ggplot(dat1)+geom_bar(aes(x=country,y=TV,fill=country),width=0.65,stat="identity")+guides(fill=FALSE)+ggtitle("Compare in World Cup 2010 TV Audience share")+ylab('TV Audience%')+xlab("")
+p3<-ggplot(dat1)+geom_bar(aes(x=country,y=GDP,fill=country),width=0.65,stat="identity")+guides(fill=FALSE)+ggtitle("Compare in GDP share")+ylab("GDP%")+xlab("")
+grid.arrange(p1,p2,p3)
+```
+
+Accodring to the graph, it's clearly that **China** is the country in Asian that has potential to host World Cup games in the future, considering the high percentage of TV Audience share, and relatively high GDP. Meanwhile, China has successfully hosted summer Olympic Games in 2008, showing its strength to the world. However, the Chinese football team only attended World Cup once, in the year of 2002.Let's look forawrd China come back to the game at its home.
+<br>
+
+Data Source: <https://github.com/fivethirtyeight/data/tree/master/fifa>
